@@ -1,8 +1,13 @@
+import logging
 import os
 
 from flask import Flask
 
 from config import Config
+from logger_setup import LoggerSetup
+
+LoggerSetup()
+logger = logging.getLogger()
 
 
 def create_app(test_config=None):
