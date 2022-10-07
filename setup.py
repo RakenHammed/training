@@ -9,5 +9,6 @@ setup(
         "flask",
         "pytest",
         "werkzeug",
+        "flask_sqlalchemy",
     ],
 )
