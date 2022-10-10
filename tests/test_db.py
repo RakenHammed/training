@@ -1,11 +1,14 @@
 import sqlite3
+from dataclasses import dataclass
 
 import pytest
+
 from app.db import get_db
 
 
 def test_init_db_command(runner, monkeypatch):
-    class Recorder(object):
+    @dataclass
+    class Recorder:
         called = False
 
     def fake_init_db():
@@ -22,7 +25,7 @@ def test_get_close_db(app):
         db = get_db()
         assert db is get_db()
 
-    with pytest.raises(sqlite3.ProgrammingError) as e:
+    with pytest.raises(sqlite3.ProgrammingError) as err:
         db.execute("SELECT 1")
 
-    assert "closed" in str(e.value)
+    assert "closed" in str(err.value)
