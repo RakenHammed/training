@@ -1,6 +1,8 @@
+import dataclasses
 import os
 
 
-class Config(object):
+@dataclasses
+class Config:
     MY_API = os.environ.get("MY_API")
-    ENV = os.environ.get("ENV")
+    DATABASE_URI = os.environ.get("DATABASE_URI")
