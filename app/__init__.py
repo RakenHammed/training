@@ -1,5 +1,4 @@
 import logging
-import os
 
 from flask import Flask
 
@@ -14,16 +13,12 @@ logger = logging.getLogger()
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(Config())
+
     if test_config and app.config["TESTING"]:
         raise Exception(
             "You are not using the test database, change the testing value in the .env file"
         )
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
 
-    # a simple page that says hello
     with app.app_context():
         from app import database
         from app.repositories import sql_alechemy_user_repository
