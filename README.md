@@ -35,3 +35,9 @@ you need this to use postgres
 check if postgres is running :
     sudo netstat -nlp | grep :5432
 
+runing the command  `source ./install.sh` will:
+    *Create venv
+    *Install packages using poetry
+    *Install pre-commit
+    
+
