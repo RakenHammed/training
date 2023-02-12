@@ -13,12 +13,13 @@ logger = logging.getLogger()
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(Config())
-
-    if test_config and app.config["TESTING"]:
-        raise Exception(
-            "You are not using the test database, change the testing value in the .env file"
-        )
-
+    if (
+        test_config
+        and not app.config.get("TESTING")
+        or not test_config
+        and app.config.get("TESTING")
+    ):
+        raise Exception(f"You are not using the right database {Config()}")
     with app.app_context():
         from app import database
         from app.repositories import sql_alechemy_user_repository
