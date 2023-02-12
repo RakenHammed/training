@@ -1,8 +1,13 @@
-import dataclasses
 import os
+from dataclasses import dataclass
 
 
-@dataclasses
+@dataclass
 class Config:
-    MY_API = os.environ.get("MY_API")
-    DATABASE_URI = os.environ.get("DATABASE_URI")
+    testing: bool = bool(os.environ.get("TESTING", ""))
+    my_api: str = os.environ.get("MY_API")
+    database_uri: str = (
+        os.environ.get("DATABASE_URI")
+        if bool(os.environ.get("TESTING"))
+        else os.environ.get("DATABASE_URI_TEST")
+    )

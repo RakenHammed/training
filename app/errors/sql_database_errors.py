@@ -1,0 +1,2 @@
+class SqlDatabaseError(Exception):
+    pass

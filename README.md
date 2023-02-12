@@ -2,8 +2,10 @@ first time:
     initialize a database storage area on disk :
         sudo mkdir /usr/local/pgsql/data
         sudo chown -v postgres /usr/local/pgsql
-    add these lines to /etc/profile to be able to use postgres command line in any user terminal:
+    add these lines as sudoer to /var/lib/postgresql/.bash_profile to be able to use postgres command line in any user terminal:
         PATH=/usr/local/pgsql/bin:$PATH
+        export PATH
+        PATH=/usr/lib/postgresql/{version}/bin:$PATH
         export PATH
     sudo su - postgres
     initdb  -D /usr/local/pgsql/data
@@ -26,7 +28,10 @@ Shutting down the server :
 
 TODO: configure user in the database
 logs from user :
-
-sudo tail -f -n 500 /var/lib/postgresql/logfile
+    sudo tail -f -n 500 /var/lib/postgresql/logfile
 you need this to use postgres
-pip install psycopg2-binary
+    pip install psycopg2-binary
+
+check if postgres is running :
+    sudo netstat -nlp | grep :5432
+
