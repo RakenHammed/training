@@ -4,7 +4,7 @@ from app.database import Base
 
 
 # pylint: disable=too-many-arguments
-class SqlAlechemyUserRepository(Base):
+class SqlAlchemyUserRepository(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     email = Column(String(120), unique=True, nullable=False)

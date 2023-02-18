@@ -8,30 +8,30 @@ from app.entities.user_filters import UserFilters
 from app.errors.sql_database_errors import SqlDatabaseError
 from app.errors.user_errors import UserIdDoesNotExists
 from app.repositories.entity_repository import EntityRepository
-from app.repositories.sql_alechemy_user_repository import SqlAlechemyUserRepository
+from app.repositories.sql_alechemy_user_repository import SqlAlchemyUserRepository
 from app.repositories.user_sql_alchemy_filters_builder import (
     UserSqlAlchemyFiltersBuilder,
 )
 
 
 class UserRepository(EntityRepository):
-    def __init__(self):
-        self.__database = database
-        self.__sql_alechemy_user_repository = SqlAlechemyUserRepository
+    def __init__(self, db=database):
+        self.__database = db
+        self.__sql_alchemy_user_repository = SqlAlchemyUserRepository
         self.__user_sql_alchemy_filters_builder = UserSqlAlchemyFiltersBuilder(
-            self.__sql_alechemy_user_repository
+            self.__sql_alchemy_user_repository
         )
 
     def get_by(self, _id=None) -> User:
         try:
-            user = self.__sql_alechemy_user_repository.query.get(_id)
+            user = self.__sql_alchemy_user_repository.query.get(_id)
             return self._to_entity_from(user, User())
         except DatabaseError as error:
             raise SqlDatabaseError("Something went wrong") from error
 
     def get_all_by(self, filters: UserFilters) -> List[User]:
         try:
-            users = self.__sql_alechemy_user_repository.query.filter(
+            users = self.__sql_alchemy_user_repository.query.filter(
                 *self.__user_sql_alchemy_filters_builder.build_from(filters)
             ).all()
             return self._to_entities_from(users, User())
@@ -40,7 +40,7 @@ class UserRepository(EntityRepository):
 
     def create(self, entity: User) -> User:
         try:
-            user_orm = self.__sql_alechemy_user_repository(
+            user_orm = self.__sql_alchemy_user_repository(
                 email=entity.email,
                 first_name=entity.first_name,
                 last_name=entity.last_name,
@@ -55,7 +55,7 @@ class UserRepository(EntityRepository):
 
     def update(self, _id, entity: User) -> User:
         try:
-            user_orm = self.__sql_alechemy_user_repository.query.get(_id)
+            user_orm = self.__sql_alchemy_user_repository.query.get(_id)
             if not user_orm:
                 raise UserIdDoesNotExists("User not found")
             if entity.email:

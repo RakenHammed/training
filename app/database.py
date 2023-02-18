@@ -1,9 +1,9 @@
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
-from app.config import Config
+from app.config import config
 
-engine = create_engine(url=Config.database_uri)
+engine = create_engine(url=config.database_uri)
 session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 Base = declarative_base(
     metadata=MetaData(

@@ -5,6 +5,7 @@ from app.entities.user import User
 from app.entities.user_filters import UserFilters
 from app.errors.sql_database_errors import SqlDatabaseError
 from app.errors.user_errors import EmailAlreadyExistsError, UserIdDoesNotExists
+from app.logger import logger
 from app.services.user_services import (
     EmailNotFoundError,
     PasswordDoesNotMatchError,
@@ -32,6 +33,7 @@ def get_all():
         response = {"users": users}
         return response, 200
     except SqlDatabaseError as error:
+        logger.exception(error)
         return str(error), 500
 
 
@@ -43,8 +45,10 @@ def create():
         response = {"user": user}
         return response, 200
     except EmailAlreadyExistsError as error:
+        logger.exception(error)
         return str(error), 409
     except SqlDatabaseError as error:
+        logger.exception(error)
         return str(error), 500
 
 
@@ -57,8 +61,10 @@ def login():
         response = {"user": user}
         return response, 200
     except EmailNotFoundError as error:
+        logger.exception(error)
         return str(error), 401
     except PasswordDoesNotMatchError as error:
+        logger.exception(error)
         return str(error), 401
 
 
@@ -70,8 +76,10 @@ def update(_id):
         response = {"user": user}
         return response, 200
     except UserIdDoesNotExists as error:
+        logger.exception(error)
         return str(error), 404
     except SqlDatabaseError as error:
+        logger.exception(error)
         return str(error), 500
 
 
@@ -82,6 +90,8 @@ def delete(_id):
         response = {}
         return response, 200
     except UserIdDoesNotExists as error:
+        logger.exception(error)
         return str(error), 404
     except SqlDatabaseError as error:
+        logger.exception(error)
         return str(error), 500

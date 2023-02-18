@@ -1,30 +1,24 @@
-import logging
-
 from flask import Flask
 
-from app.config import Config
-from app.controllers import users_controller
-from app.logger_setup import LoggerSetup
-
-LoggerSetup()
-logger = logging.getLogger()
+from app.config import config
+from app.logger import logger
 
 
-def create_app(test_config=None):
+def create_app(test_config: dict = None):
+    logger.info("Logger is setup")
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object(Config())
-    if (
-        test_config
-        and not app.config.get("TESTING")
-        or not test_config
-        and app.config.get("TESTING")
-    ):
-        raise Exception(f"You are not using the right database {Config()}")
+
+    if not test_config:
+        app.config.from_object(config)
+    else:
+        app.config.from_mapping(test_config)
     with app.app_context():
         from app import database
         from app.repositories import sql_alechemy_user_repository
 
         database.init_db(app)
+    from app.controllers import users_controller
+
     app.register_blueprint(users_controller.bp)
     app.add_url_rule("/", endpoint="index")
     return app

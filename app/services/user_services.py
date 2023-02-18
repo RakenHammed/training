@@ -9,13 +9,13 @@ from app.errors.user_errors import (
     PasswordDoesNotMatchError,
 )
 from app.repositories.user_repository import UserRepository
-from app.services.authentification_services import AuthentificationServices
+from app.services.authentification_services import AuthenticationServices
 
 
 class UserServices:
-    def __init__(self):
-        self.__authentification_services = AuthentificationServices()
-        self.__user_repository: UserRepository = UserRepository()
+    def __init__(self, user_repository: UserRepository = UserRepository()):
+        self.__authentication_services = AuthenticationServices()
+        self.__user_repository = user_repository
 
     def get_one_by(self, _id) -> User:
         return self.__user_repository.get_by(_id)
@@ -25,15 +25,15 @@ class UserServices:
 
     def create(self, user: User) -> User:
         self.raise_error_if_email_exists(user.email)
-        user.password_hash = self.__authentification_services.generate_password_hash(
+        user.password_hash = self.__authentication_services.generate_password_hash(
             user.password
         )
         return self.__user_repository.create(user)
 
     def update(self, _id, user: User) -> User:
         if user.password:
-            user.password_hash = (
-                self.__authentification_services.generate_password_hash(user.password)
+            user.password_hash = self.__authentication_services.generate_password_hash(
+                user.password
             )
         return self.__user_repository.update(_id, user)
 
@@ -53,7 +53,7 @@ class UserServices:
         raise EmailNotFoundError("Email not found")
 
     def check_if_valid_password_else_error(self, password: str, user: User) -> None:
-        if not self.__authentification_services.check_password_hash(
+        if not self.__authentication_services.check_password_hash(
             password_hash=user.password_hash, password=password
         ):
             raise PasswordDoesNotMatchError("Password does not match")
