@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./src:/usr/share/nginx/html
+      - ./logs:/logs
     networks:
       - backend
     depends_on:
