@@ -1,4 +1,5 @@
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from app.config import config
 from app.logger import logger
@@ -7,7 +8,7 @@ from app.logger import logger
 def create_app(test_config: dict = None):
     logger.info("Logger is setup")
     app = Flask(__name__, instance_relative_config=True)
-
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
     if not test_config:
         app.config.from_object(config)
     else:

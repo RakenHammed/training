@@ -1,5 +1,17 @@
 version: "3.9"
 services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/usr/share/nginx/html
+    networks:
+      - backend
+    depends_on:
+      - application
   postgres:
     image: postgres
     environment:
@@ -22,9 +34,9 @@ services:
   application:
     build:
       context: .
-      dockerfile: ./dockerfile
+      dockerfile: app/Dockerfile
     volumes:
-      - .:/application
+      - ./logs:/application/logs
     ports:
       - "5000:5000"
     env_file:
