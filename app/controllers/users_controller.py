@@ -22,6 +22,7 @@ def get_one(_id):
         response = {"user": user}
         return response, 200
     except SqlDatabaseError as error:
+        logger.exception(error)
         return str(error), 500
 
 
@@ -43,7 +44,7 @@ def create():
     try:
         user = UserServices().create(User(**user_params))
         response = {"user": user}
-        return response, 200
+        return response, 201
     except EmailAlreadyExistsError as error:
         logger.exception(error)
         return str(error), 409
@@ -88,7 +89,7 @@ def delete(_id):
     try:
         UserServices().delete(_id)
         response = {}
-        return response, 200
+        return response, 204
     except UserIdDoesNotExists as error:
         logger.exception(error)
         return str(error), 404
