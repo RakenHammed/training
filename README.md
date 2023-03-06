@@ -38,13 +38,16 @@ or  in debug mode
 ```bash
     flask --debug run
 ```
+When using this method the app will be accessible using http://localhost:5000
 #### Using containers
 
 If you do not want to bother with dependencies and database issues you can build and run the app directly using docker
 ```bash
     docker compose up --build
 ```
+When using this method the app will be accessible using http://localhost:8080 (nginx http server)
 
+PS: If you are in production environment use the docker compose methode after setting the variable inside .env to "production" so that it uses a dedicated WSGI server(gunicorn) best suited for production deployement.
 ## TODO
 Tests !!!!!!!!!!
 
